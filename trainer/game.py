@@ -3,9 +3,7 @@ from util import hilite
 
 class Game:
     def __init__(self):
-        self.getch = _Getch()
-        self.current_line = "ABCD EFGH IJKL"
-        self.done_line = ""
+        self.
 
     def start(self):
         self.loop()
@@ -24,3 +22,4 @@ class Game:
                     self.done_line += letter
                     break
         print hilite("done", True, True)
+
