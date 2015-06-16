@@ -2,6 +2,9 @@ import datetime
 
 
 class Timeable:
+    """ Utility class which allows inheriting classes to be timed.
+
+    """
     def __init__(self):
         self.start_time = None
         self.stop_time = None
@@ -20,8 +23,9 @@ class Timeable:
 
 
 class Prompt(Timeable):
-    """ A line of text the user must type. Also holds the speed at which the user typed the text
-    and any error data.
+    """ A line of text the user must type.
+    Also holds the speed at which the user typed the text and any error data.
+
     """
 
     def __init__(self, line):
@@ -54,7 +58,8 @@ class Prompt(Timeable):
 
 
 class PromptCharacter(Timeable):
-    """ A single character in a prompt. Holds the error count and the speed at which the letter was hit.
+    """ A single character in a prompt.
+    Holds the error count and the speed at which the letter was hit.
 
     """
     def __init__(self, char):
