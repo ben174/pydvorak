@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from os import system
 import curses
 from string import ascii_uppercase
 import random
@@ -14,7 +13,7 @@ def main():
     while True:
         prompt_line = " ".join(["".join([random.choice(ascii_uppercase) for r in range(4)]) for r in range(4)])
         prompt = Prompt(prompt_line)
-        window.prompt(prompt)
+        window.do_prompt(prompt)
 
 
 class Prompt:
@@ -27,20 +26,22 @@ class Prompt:
         self.position = 0
         self.start_time = None
         self.done = False
+        self.characters[0].start()
 
     def advance(self):
+        self.characters[self.position].finish()
+        self.position += 1
         if self.position == len(self.characters):
             self.done = True
             return False
-        self.position += 1
         self.characters[self.position].start()
         return True
 
-    def current_character(self):
+    def get_current_character(self):
         return self.characters[self.position].character
 
-    def get_line(self):
-        return "".join([c.character for c in self.characters])
+    def get_done_characters(self):
+        return "".join(self.get_line()[0:self.position])
 
     def start(self):
         self.start_time = datetime.datetime.now()
@@ -49,8 +50,14 @@ class Prompt:
         self.elapsed_time = None
         self.elapsed_time = datetime.datetime.now() - self.start_time
 
-    def __unicode__(self):
+    def get_elapsed_time(self):
+        return datetime.datetime.now() - self.start_time
+
+    def get_line(self):
         return "".join([c.character for c in self.characters])
+
+    def __str__(self):
+        return self.get_line()
 
 class PromptCharacter:
     """ A single character in a prompt. Holds the error count and the speed at which the letter was hit.
@@ -71,7 +78,7 @@ class PromptCharacter:
     def finish(self):
         self.elapsed_time = datetime.datetime.now() - self.start_time
 
-    def __unicode__(self):
+    def __str__(self):
         return self.character
 
 
@@ -84,9 +91,11 @@ class Window:
         self.prompt_win = curses.newwin(1, 22, 5, 2)
         self.timer_win = curses.newwin(1, 22, 2, 60)
         self.timer_win.leaveok(True)
-        self.start_timer_thread()
         self.current_prompt = None
+        self.start_time = datetime.datetime.now()
+        self.start_timer_thread()
         curses.noecho()
+        self.screen.nodelay(True)
 
     def start_timer_thread(self):
         clock = threading.Thread(target=self.timer_thread_entry)
@@ -99,10 +108,13 @@ class Window:
             time.sleep(1)
 
     def update_time(self):
-        elapsed_time = datetime.datetime.now() - self.prompt_start_time
+        elapsed_time = datetime.datetime.now() - self.start_time
         self.timer_win.addstr(0, 0, str(elapsed_time))
         self.timer_win.refresh()
         self.place_cursor()
+        if self.current_prompt:
+            #TODO: Current prompt timer
+            pass
 
     def init_window(self):
         self.screen.clear()
@@ -111,29 +123,28 @@ class Window:
         self.screen.refresh()
 
     def place_cursor(self):
-        prompt_y, prompt_x = 5, 20 - self.prompt_position
+        prompt_y, prompt_x = 5, 20 - self.current_prompt.position
         self.screen.move(prompt_y, prompt_x)
 
-    def prompt(self, prompt):
+    def do_prompt(self, prompt):
         self.current_prompt = prompt
-        prompt.start()
+        self.current_prompt.start()
         self.update_time()
-        self.template_win.addstr(0, 0, prompt.get_line(), curses.A_BOLD)
+        self.template_win.addstr(0, 0, self.current_prompt.get_line(), curses.A_BOLD)
         self.template_win.refresh()
         input_chars = []
-        current_letter = prompt_chars.pop(0)
         while True:
             self.update_pointer()
-            self.template_win.addstr(0, 0, str(prompt))
+            self.template_win.addstr(0, 0, self.current_prompt.get_done_characters())
             self.template_win.refresh()
-            prompt_y, prompt_x = 5, 20 - len(str(prompt))
-            input_char = chr(self.screen.getch(prompt_y, prompt_x)).upper()
-            if input_char == current_letter:
-                if self.current_prompt.advance():
-                    current_letter = prompt_chars.pop(0)
-                else:
-                    return
+            prompt_y, prompt_x = 5, 20 - len(str(self.current_prompt))
+            self.screen.nodelay(0)
+            _oord = self.screen.getch(prompt_y, prompt_x)
+            input_char = chr(_oord).upper()
+            if input_char == self.current_prompt.get_current_character():
                 input_chars.append(input_char)
+                if not self.current_prompt.advance():
+                    return
             else:
                 curses.beep()
                 curses.flash()
