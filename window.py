@@ -2,6 +2,7 @@ import curses
 import datetime
 import threading
 import time
+from string import ascii_uppercase
 
 
 class Window:
@@ -79,10 +80,13 @@ class Window:
                 input_chars.append(input_char)
                 if not self.current_prompt.advance():
                     return
-            else:
+            elif input_char in ascii_uppercase or input_char == ' ':
                 curses.beep()
                 curses.flash()
                 self.current_prompt.get_current_character().error()
+            else:
+                # unrecognized character
+                pass
 
     def update_pointer(self):
         self.prompt_win.addstr(0, 0, " " * 20)
