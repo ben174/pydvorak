@@ -1,23 +1,24 @@
 import datetime
 
 
-class Timeable:
+class Timeable(object):
     """ Utility class which allows inheriting classes to be timed.  """
     def __init__(self):
         self.start_time = None
         self.stop_time = None
+        self.done = False
 
     def start(self):
         self.start_time = datetime.datetime.now()
 
     def finish(self):
+        self.done = True
         self.stop_time = datetime.datetime.now()
 
     def get_elapsed_time(self):
+        if self.done:
+            return self.stop_time - self.start_time
         return datetime.datetime.now() - self.start_time
-
-    def get_timed_time(self):
-        return self.stop_time - self.start_time
 
 
 class Prompt(Timeable):
@@ -26,11 +27,9 @@ class Prompt(Timeable):
 
     """
     def __init__(self, line):
-        #super(Prompt, self).__init__()
+        super(Prompt, self).__init__()
         self.characters = [PromptCharacter(l) for l in list(line)]
         self.position = 0
-        self.start_time = None
-        self.done = False
         self.characters[0].start()
 
     def advance(self):
@@ -63,9 +62,8 @@ class PromptCharacter(Timeable):
 
     """
     def __init__(self, char):
-        #super(PromptCharacter, self).__init__()
+        super(PromptCharacter, self).__init__()
         self.character = char
-        self.start_time = None
         self.error_count = 0
 
     def error(self):
