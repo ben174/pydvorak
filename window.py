@@ -20,7 +20,8 @@ class Window:
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
         self.start_timer_thread()
-        self.mapper = DvorakMapper()
+        self.mapper = None
+        #self.mapper = DvorakMapper()
         curses.noecho()
         self.screen.nodelay(True)
 
