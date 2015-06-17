@@ -1,7 +1,5 @@
 import curses
 import datetime
-import threading
-import time
 from string import ascii_uppercase
 from keymaps import DvorakMapper
 
@@ -10,9 +8,9 @@ class Window:
     """ Contains all the view information for this application.
 
     """
-    def __init__(self, screen):
+    def __init__(self, screen, game):
+        self.game = game
         self.screen = screen
-        #self.screen = curses.initscr()
         self.init_window()
         self.error_win = curses.newwin(1, 22, 3, 2)
         self.template_win = curses.newwin(1, 22, 4, 2)
@@ -22,23 +20,11 @@ class Window:
         self.score_win.border(0)
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
-        self.start_timer_thread()
         self.mapper = None
         #self.mapper = DvorakMapper()
         curses.noecho()
         self.screen.nodelay(True)
 
-    def start_timer_thread(self):
-        """ Starts a new thread to update the timers.
-        """
-        clock = threading.Thread(target=self.timer_thread_entry)
-        clock.daemon = True
-        clock.start()
-
-    def timer_thread_entry(self):
-        while 1:
-            self.update_time()
-            time.sleep(0.1)
 
     def update_time(self):
         if self.current_prompt and not self.current_prompt.done:
@@ -48,6 +34,10 @@ class Window:
             self.timer_win.addstr(1, 0, str(char_seconds).zfill(2))
             self.timer_win.refresh()
             self.place_cursor()
+
+    def update_scores(self):
+        pass
+
 
     def init_window(self):
         self.screen.clear()
