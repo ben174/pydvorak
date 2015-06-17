@@ -15,8 +15,12 @@ class Window:
         self.template_win = curses.newwin(1, 22, 4, 2)
         self.prompt_win = curses.newwin(1, 22, 5, 2)
         self.timer_win = curses.newwin(2, 22, 2, 60)
-        self.score_win = curses.newwin(10, 10, 6, 60)
-        self.score_win.border(0)
+        self.score_win = curses.newwin(10, 14, 6, 60)
+        self.score_win.border(1)
+        self.score_win.addstr(1, 2, "SCOREBOARD")
+        self.score_win.addstr(2, 2, "----------")
+        self.score_win.box()
+        self.score_win.refresh()
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
         curses.noecho()
@@ -32,8 +36,17 @@ class Window:
             self.timer_win.refresh()
             self.place_cursor()
 
-    def update_scores(self, scoreboard):
-        pass
+    def update_scores(self, scorecard, pool):
+        for i, letter in enumerate(pool.pool):
+            score = scorecard[letter]
+            if score.prompt_characters:
+                score_line = '{}: {}'.format(letter, str(score.get_average_speed()/100000.0))
+            else:
+                score_line = '{}: ------'.format(letter)
+
+            self.score_win.addstr(i+3, 2, score_line)
+        self.score_win.box()
+        self.score_win.refresh()
 
 
     def init_window(self):
@@ -74,6 +87,8 @@ class Window:
 
             if input_char == self.current_prompt.get_current_character().character:
                 input_chars.append(input_char)
+                # emits the current character out to the game class for scoring
+                yield self.current_prompt.get_current_character()
                 if not self.current_prompt.advance():
                     return
             elif input_char in ascii_uppercase or input_char == ' ':
