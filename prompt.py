@@ -26,7 +26,7 @@ class Prompt(Timeable):
 
     """
     def __init__(self, line):
-        super(Prompt, self).__init__()
+        #super(Prompt, self).__init__()
         self.characters = [PromptCharacter(l) for l in list(line)]
         self.position = 0
         self.start_time = None
@@ -63,7 +63,7 @@ class PromptCharacter(Timeable):
 
     """
     def __init__(self, char):
-        super(PromptCharacter, self).__init__()
+        #super(PromptCharacter, self).__init__()
         self.character = char
         self.start_time = None
         self.error_count = 0

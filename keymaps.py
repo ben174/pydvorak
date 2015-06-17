@@ -5,5 +5,7 @@ class DvorakMapper:
         dvorak_map = '`1234567890[]\',.PYFGCRL/=AOEUIDHTNS-;QJKXBMWVZ'
         self.map = dict(zip(qwerty_map, dvorak_map))
 
-    def map(self, key):
+    def map_key(self, key):
+        if key not in self.map.keys():
+            return key
         return self.map[key]

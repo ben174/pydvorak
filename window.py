@@ -3,6 +3,7 @@ import datetime
 import threading
 import time
 from string import ascii_uppercase
+from keymaps import DvorakMapper
 
 
 class Window:
@@ -19,6 +20,7 @@ class Window:
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
         self.start_timer_thread()
+        self.mapper = DvorakMapper()
         curses.noecho()
         self.screen.nodelay(True)
 
@@ -76,6 +78,9 @@ class Window:
             self.screen.nodelay(0)
             _oord = self.screen.getch(prompt_y, prompt_x)
             input_char = chr(_oord).upper()
+            if self.mapper:
+                input_char = self.mapper.map_key(input_char)
+
             if input_char == self.current_prompt.get_current_character().character:
                 input_chars.append(input_char)
                 if not self.current_prompt.advance():
