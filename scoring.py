@@ -3,6 +3,7 @@ from string import ascii_uppercase
 
 class ScoreCard(dict):
     def __init__(self):
+        super(ScoreCard, self).__init__()
         for c in ascii_uppercase:
             self[c] = CharacterScore(c)
         self[' '] = CharacterScore(' ')
@@ -18,10 +19,7 @@ class CharacterScore:
         self.prompt_characters = []
 
     def get_total_errors(self):
-        ret = 0
-        for pc in self.prompt_characters:
-            ret += pc.error_count
-        return ret
+        return sum([pc.error_count for pc in self.prompt_characters])
 
     def get_error_rate(self):
         return self.get_total_errors() / len(self.prompt_characters)

@@ -1,9 +1,14 @@
 # pydvorak
-A Python command line app to help teach Dvorak
+A Python curses application to help teach typing in Dvorak.
+
+Heat Maps it should do:
+
+-  Keep precise score of each keypress
+-  Determine what letters you are weak at
+-  Allow the user to specify what letters he'd like to learn
+-  Persist scores and historical data
+-  Manually configurable timeout so we don't skew the records when they go afk
+
+![Querty vs. Dvorak Heat Map](http://cdn.arstechnica.net/wp-content/uploads/2014/03/dvorak3-640x605.jpg "Heat Maps")
 
 
-Things it should do:
-1. Determine what letters you are weak at
-1. Allow the user to specify what letters he'd like to learn
-1. Persist records to a sqlite db
-1. Manually configurable timeout so we don't skew the records when they go afk
