@@ -8,6 +8,7 @@ Heat Maps it should do:
 -  Allow the user to specify what letters he'd like to learn
 -  Persist scores and historical data
 -  Manually configurable timeout so we don't skew the records when they go afk
+-  Emulate Dvorak keymap so the user doesn't have to change their keymap.
 
 ![Querty vs. Dvorak Heat Map](http://cdn.arstechnica.net/wp-content/uploads/2014/03/dvorak3-640x605.jpg "Heat Maps")
 
