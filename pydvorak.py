@@ -1,25 +1,11 @@
 #!/usr/bin/env python
 
-from string import ascii_uppercase
-import random
 import curses
 
-from prompt import Prompt
-from scoring import ScoreCard
-from window import Window
-
+from game import Game
 
 def main():
-    #window = curses.wrapper(Window)
-    window = Window()
-    scorecard = ScoreCard()
-    while True:
-        #pool = ascii_uppercase
-        pool = 'EAINTO'
-        prompt_line = " ".join(["".join([random.choice(pool) for r in range(4)]) for r in range(4)])
-        prompt = Prompt(prompt_line)
-        window.do_prompt(prompt)
-        scorecard.consume_prompt(prompt)
+    curses.wrapper(Game)
 
 
 if __name__ == '__main__':

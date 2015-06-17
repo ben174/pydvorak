@@ -10,13 +10,16 @@ class Window:
     """ Contains all the view information for this application.
 
     """
-    def __init__(self):
-        self.screen = curses.initscr()
+    def __init__(self, screen):
+        self.screen = screen
+        #self.screen = curses.initscr()
         self.init_window()
         self.error_win = curses.newwin(1, 22, 3, 2)
         self.template_win = curses.newwin(1, 22, 4, 2)
         self.prompt_win = curses.newwin(1, 22, 5, 2)
         self.timer_win = curses.newwin(2, 22, 2, 60)
+        self.score_win = curses.newwin(10, 10, 6, 60)
+        self.score_win.border(0)
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
         self.start_timer_thread()
