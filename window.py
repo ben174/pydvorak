@@ -1,16 +1,15 @@
 import curses
 import datetime
 from string import ascii_uppercase
-from keymaps import DvorakMapper
 
 
 class Window:
     """ Contains all the view information for this application.
 
     """
-    def __init__(self, screen, game):
-        self.game = game
+    def __init__(self, screen, mapper=None):
         self.screen = screen
+        self.mapper = mapper
         self.init_window()
         self.error_win = curses.newwin(1, 22, 3, 2)
         self.template_win = curses.newwin(1, 22, 4, 2)
@@ -20,8 +19,6 @@ class Window:
         self.score_win.border(0)
         self.current_prompt = None
         self.start_time = datetime.datetime.now()
-        self.mapper = None
-        #self.mapper = DvorakMapper()
         curses.noecho()
         self.screen.nodelay(True)
 
@@ -35,7 +32,7 @@ class Window:
             self.timer_win.refresh()
             self.place_cursor()
 
-    def update_scores(self):
+    def update_scores(self, scoreboard):
         pass
 
 

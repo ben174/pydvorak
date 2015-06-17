@@ -1,6 +1,7 @@
 import random
 import threading
 import time
+from keymaps import DvorakMapper
 from prompt import Prompt
 from scoring import ScoreCard
 from window import Window
@@ -9,7 +10,9 @@ from window import Window
 class Game:
     def __init__(self, screen):
         self.scorecard = ScoreCard()
-        self.window = Window(screen, self)
+        mapper = None
+        #mapper = DvorakMapper()
+        self.window = Window(screen, mapper=mapper)
         self.start_timer_thread()
         self.start()
 
@@ -37,4 +40,4 @@ class Game:
     def tick(self):
         """ Occurs every few milliseconds allowing the game to update timers and scoreboards. """
         self.window.update_time()
-        self.window.update_scores()
+        self.window.update_scores(self.scorecard)
