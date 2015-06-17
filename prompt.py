@@ -45,6 +45,8 @@ class Prompt(Timeable):
         return True
 
     def get_current_character(self):
+        if self.done:
+            return None
         return self.characters[self.position]
 
     def get_done_characters(self):
@@ -66,7 +68,6 @@ class PromptCharacter(Timeable):
         self.character = char
         self.start_time = None
         self.error_count = 0
-        self.elapsed_time = None
 
     def error(self):
         self.error_count += 1

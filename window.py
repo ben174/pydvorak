@@ -35,7 +35,7 @@ class Window:
             time.sleep(0.1)
 
     def update_time(self):
-        if self.current_prompt:
+        if self.current_prompt and not self.current_prompt.done:
             prompt_seconds = self.current_prompt.get_elapsed_time().seconds
             char_seconds = self.current_prompt.get_current_character().get_elapsed_time().seconds
             self.timer_win.addstr(0, 0, str(prompt_seconds).zfill(2))
